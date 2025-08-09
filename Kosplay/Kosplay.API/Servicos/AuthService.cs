@@ -2,10 +2,12 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Azure;
 using Kosplay.API.Vmodels.Auth;
 using Kosplay.Domain.Interfaces.Services;
 using Kosplay.Domain.Models.Entity;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Kosplay.API.Servicos
@@ -13,17 +15,43 @@ namespace Kosplay.API.Servicos
     public class AuthService : IAuthService
     {
         private readonly UserManager<UserEntity> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly RoleManager<IdentityRole<int>> _roleManager;
         private readonly IConfiguration _configuration;
 
-        public AuthService(UserManager<UserEntity> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+        public AuthService(UserManager<UserEntity> userManager, RoleManager<IdentityRole<int>> roleManager, IConfiguration configuration)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _configuration = configuration;
         }
 
-        public async Task LoginAsync(RequestAuthViewModel request)
+        public async Task<ResponseRegisterUserViewModel?> RegisterAsync(RequestRegisterUserViewModel request)
+        {
+            var userExists = await _userManager.FindByNameAsync(request.Username);
+
+            if (userExists != null)
+            {
+                return null;
+            }
+
+            UserEntity user = new()
+            {
+                Email = request.Email,
+                SecurityStamp = Guid.NewGuid().ToString(),
+                UserName = request.Username
+            };
+            var result = await _userManager.CreateAsync(user, request.Password);
+
+            if (!result.Succeeded)
+            {
+                return null;
+            }
+
+            return new ResponseRegisterUserViewModel { Id =  user.Id};
+        }
+
+
+        public async Task<ResponseAuthViewModel> LoginAsync(RequestAuthViewModel request)
         {
             var user = await _userManager.FindByEmailAsync(request.Email);
             if (user == null || !await _userManager.CheckPasswordAsync(user, request.Password))
@@ -54,6 +82,14 @@ namespace Kosplay.API.Servicos
             user.RefreshTokenExpiryTime = DateTime.Now.AddMinutes(refreshTokenValidityInMinutes);
 
             await _userManager.UpdateAsync(user);
+
+            return new ResponseAuthViewModel
+            {
+                Token = new JwtSecurityTokenHandler().WriteToken(token),
+                Expiration = token.ValidTo.Minute,
+                RefreshToken = refreshToken
+            };
+
         }
 
         private JwtSecurityToken CreateToken(List<Claim> authClaims)

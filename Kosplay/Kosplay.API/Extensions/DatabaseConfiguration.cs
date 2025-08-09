@@ -1,4 +1,5 @@
-﻿using Kosplay.Infra.Context;
+﻿using Kosplay.Domain.Models.Entity;
+using Kosplay.Infra.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,9 +11,6 @@ namespace Kosplay.API.Extensions
         {
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("ConnectionDefault")));
 
-            services.AddIdentity<IdentityUser, IdentityRole>()
-            .AddEntityFrameworkStores<AppDbContext>()
-            .AddDefaultTokenProviders();
             return services;
         }
     }
