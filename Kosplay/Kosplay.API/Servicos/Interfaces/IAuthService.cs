@@ -8,5 +8,7 @@ namespace Kosplay.Domain.Interfaces.Services
     {
         Task<ResponseAuthViewModel> LoginAsync(RequestAuthViewModel request);
         Task<ResponseRegisterUserViewModel?> RegisterAsync(RequestRegisterUserViewModel request);
+
+        Task<ResponseRefreshTokenViewModel> RefreshTokenAsync(RequestRefreshTokenViewModel request);
     }
 }

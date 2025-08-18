@@ -5,21 +5,30 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kosplay.Infra.Context
 {
-    public class AppDbContext : IdentityDbContext<UserEntity, IdentityRole<int>, int>
+    public class AppDbContext
+         : IdentityDbContext<UserEntity, RoleEntity, int,
+             UserClaimEntity, UserRoleEntity, UserLoginEntity,
+             RoleClaimEntity, UserTokenEntity>
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        public AppDbContext(DbContextOptions<AppDbContext> options)
+            : base(options)
         {
-
         }
+
+        // Suas entidades customizadas
         public DbSet<CategoryEntity> Category { get; set; }
-        public DbSet<ProductEntity> Product{ get; set; }
+        public DbSet<ProductEntity> Product { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            // Aplica as configurações do Identity (PK int, FKs, etc.)
             base.OnModelCreating(builder);
+
+            // Aplica todas as configurações de Mappings do seu assembly
             builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
         }
     }
+}
 
     
-}
+

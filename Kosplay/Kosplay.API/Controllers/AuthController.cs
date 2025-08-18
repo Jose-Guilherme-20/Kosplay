@@ -49,6 +49,13 @@ namespace Kosplay.API.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
+
+           
+        }
+        [HttpPost("refresh")]
+        public async Task<IActionResult> RefreshToken(RequestRefreshTokenViewModel request)
+        {
+            return Ok(_authService.RefreshTokenAsync(request));
         }
     }
 }

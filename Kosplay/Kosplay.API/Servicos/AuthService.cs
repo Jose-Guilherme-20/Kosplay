@@ -50,7 +50,6 @@ namespace Kosplay.API.Servicos
             return new ResponseRegisterUserViewModel { Id =  user.Id};
         }
 
-
         public async Task<ResponseAuthViewModel> LoginAsync(RequestAuthViewModel request)
         {
             var user = await _userManager.FindByEmailAsync(request.Email);
@@ -110,12 +109,76 @@ namespace Kosplay.API.Servicos
             return token;
         }
 
+        public async Task<ResponseRefreshTokenViewModel> RefreshTokenAsync(RequestRefreshTokenViewModel request)
+        {
+            if (request is null)
+            {
+                return null;
+            }
+
+            string? accessToken = request.AccessToken;
+            string? refreshToken = request.RefreshToken;
+
+            var principal = GetPrincipalFromExpiredToken(accessToken);
+            if (principal == null)
+            {
+                return null;
+            }
+
+            string username = principal.Identity.Name;
+            var user = await _userManager.FindByNameAsync(username);
+
+            if (user == null || user.RefreshToken != refreshToken ||
+                       user.RefreshTokenExpiryTime <= DateTime.Now)
+            {
+                return null;
+            }
+
+            var newAccessToken = CreateToken(principal.Claims.ToList());
+            var newRefreshToken = GenerateRefreshToken();
+
+            user.RefreshToken = newRefreshToken;
+            await _userManager.UpdateAsync(user);
+
+            return new ResponseRefreshTokenViewModel
+            {
+                AccessToken = new JwtSecurityTokenHandler().WriteToken(newAccessToken),
+                RefreshToken = newRefreshToken
+            };
+        }
+
         private static string GenerateRefreshToken()
         {
             var randomNumber = new byte[64];
             using var rng = RandomNumberGenerator.Create();
             rng.GetBytes(randomNumber);
             return Convert.ToBase64String(randomNumber);
+        }
+
+        private ClaimsPrincipal? GetPrincipalFromExpiredToken(string? token)
+        {
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateAudience = false,
+                ValidateIssuer = false,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
+                                   .GetBytes(_configuration["JWT:SecretKey"])),
+                ValidateLifetime = false
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+
+            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters,
+                            out SecurityToken securityToken);
+
+            if (securityToken is not JwtSecurityToken jwtSecurityToken ||
+                      !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
+                                     StringComparison.InvariantCultureIgnoreCase))
+                throw new SecurityTokenException("Invalid token");
+
+            return principal;
         }
     }
 }
