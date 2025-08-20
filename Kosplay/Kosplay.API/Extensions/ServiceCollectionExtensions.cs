@@ -1,5 +1,7 @@
 ﻿using Kosplay.API.Servicos;
+using Kosplay.Domain.Interfaces.HttpService;
 using Kosplay.Domain.Interfaces.Services;
+using Kosplay.Infra.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace Kosplay.API.Extensions
@@ -15,6 +17,9 @@ namespace Kosplay.API.Extensions
             //services.AddScoped<IUserRepository, UserRepository>();
             //services.AddScoped<IProductRepository, ProductRepository>();
 
+            #region INFRA
+            services.AddScoped<IImageKitService, ImageKitService>();
+            #endregion
 
             return services;
         }

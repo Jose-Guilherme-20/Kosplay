@@ -1,11 +1,12 @@
 
-using Kosplay.Infra.Context;
-using Kosplay.Domain.Models.Entity;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Kosplay.API.Extensions;
+using Kosplay.Domain.Models.Entity;
+using Kosplay.Domain.Models.HttpService;
+using Kosplay.Infra.Context;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +25,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.Configure<ImageKitOptions>(builder.Configuration.GetSection("ImageKit"));
 
 // Authentication
 builder.Services.AddAuthentication(options =>
