@@ -3,6 +3,7 @@ using System.Text;
 using Kosplay.API.Extensions;
 using Kosplay.Domain.Models.Entity;
 using Kosplay.Domain.Models.HttpService;
+using Kosplay.Infra;
 using Kosplay.Infra.Context;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -14,11 +15,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddApplicationServices();
 
-builder.Services.ConfigurationDatabase(builder.Configuration);
+builder.Services.AddInfrastructureServices(builder.Configuration);
 
 builder.Services.AddDefaultIdentity<UserEntity>()
     .AddRoles<IdentityRole<int>>()
-    .AddEntityFrameworkStores<AppDbContext>()
+    .AddEntityFrameworkStores<KosplayDbContext>()
     .AddDefaultTokenProviders();
 
 builder.Services.AddControllers();

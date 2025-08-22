@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Kosplay.Domain.Enum;
 
 namespace Kosplay.API.Vmodels.Auth
 {
@@ -13,5 +14,6 @@ namespace Kosplay.API.Vmodels.Auth
 
         [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; } = string.Empty;
+        public List<int> RolesId { get; set; }
     }
 }

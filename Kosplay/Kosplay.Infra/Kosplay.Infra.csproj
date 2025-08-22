@@ -7,10 +7,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Folder Include="Repository\" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <PackageReference Include="Imagekit" Version="5.0.0" />
 	  <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.2" />
 	  <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.2" />

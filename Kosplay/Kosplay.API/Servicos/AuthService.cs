@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Azure;
 using Kosplay.API.Vmodels.Auth;
+using Kosplay.Domain.Enum;
 using Kosplay.Domain.Interfaces.Services;
 using Kosplay.Domain.Models.Entity;
 using Microsoft.AspNetCore.Identity;
@@ -47,7 +48,28 @@ namespace Kosplay.API.Servicos
                 return null;
             }
 
+            foreach (var roleId in request.RolesId)
+            {
+                var roleName = Enum.GetName(typeof(RoleEnum), roleId);
+                if (!string.IsNullOrEmpty(roleName))
+                {
+                    await AddRoleToUserAsync(user, roleName);
+                }
+            }
+
             return new ResponseRegisterUserViewModel { Id =  user.Id};
+        }
+
+        private async Task AddRoleToUserAsync(UserEntity user, string roleName)
+        {
+            if (!await _roleManager.RoleExistsAsync(roleName))
+            {
+                await _roleManager.CreateAsync(new IdentityRole<int>(roleName));
+            }
+            if (!await _userManager.IsInRoleAsync(user, roleName))
+            {
+                await _userManager.AddToRoleAsync(user, roleName);
+            }
         }
 
         public async Task<ResponseAuthViewModel> LoginAsync(RequestAuthViewModel request)

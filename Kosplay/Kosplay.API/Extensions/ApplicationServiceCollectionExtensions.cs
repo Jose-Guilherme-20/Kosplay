@@ -6,20 +6,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kosplay.API.Extensions
 {
-    public static class ServiceCollectionExtensions
+    public static class ApplicationServiceCollectionExtensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             // Serviços de aplicação
-            services.AddScoped<IAuthService, AuthService>();
-
-            // Repositórios
-            //services.AddScoped<IUserRepository, UserRepository>();
-            //services.AddScoped<IProductRepository, ProductRepository>();
-
-            #region INFRA
-            services.AddScoped<IImageKitService, ImageKitService>();
-            #endregion
+            services.AddScoped<IAuthService, AuthService>();  
 
             return services;
         }

@@ -5,12 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kosplay.Infra.Context
 {
-    public class AppDbContext
+    public class KosplayDbContext
          : IdentityDbContext<UserEntity, RoleEntity, int,
              UserClaimEntity, UserRoleEntity, UserLoginEntity,
              RoleClaimEntity, UserTokenEntity>
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options)
+        public KosplayDbContext(DbContextOptions<KosplayDbContext> options)
             : base(options)
         {
         }
@@ -25,7 +25,7 @@ namespace Kosplay.Infra.Context
             base.OnModelCreating(builder);
 
             // Aplica todas as configurações de Mappings do seu assembly
-            builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+            builder.ApplyConfigurationsFromAssembly(typeof(KosplayDbContext).Assembly);
         }
     }
 }

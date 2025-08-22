@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Kosplay.Infra.Migrations
 {
-    [DbContext(typeof(AppDbContext))]
+    [DbContext(typeof(KosplayDbContext))]
     [Migration("20250818132417_InitialCreate")]
     partial class InitialCreate
     {

@@ -16,6 +16,11 @@ namespace Kosplay.Infra.Mappings
            .WithMany(x => x.Products)              
            .HasForeignKey(x => x.UserId)          
            .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(x => x.Status)
+           .WithMany(x => x.Products)
+           .HasForeignKey(x => x.StatusId)
+           .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

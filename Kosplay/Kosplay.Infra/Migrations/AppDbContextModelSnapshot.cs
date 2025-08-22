@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Kosplay.Infra.Migrations
 {
-    [DbContext(typeof(AppDbContext))]
+    [DbContext(typeof(KosplayDbContext))]
     partial class AppDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
