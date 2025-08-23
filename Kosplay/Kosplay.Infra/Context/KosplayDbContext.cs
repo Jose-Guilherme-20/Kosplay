@@ -18,6 +18,9 @@ namespace Kosplay.Infra.Context
         // Suas entidades customizadas
         public DbSet<CategoryEntity> Category { get; set; }
         public DbSet<ProductEntity> Product { get; set; }
+        public DbSet<StatusEntity> Status { get; set; }
+        public DbSet<DocumentEntity> Document { get; set; }
+        public DbSet<ProductImagesEntity> ProductImage { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

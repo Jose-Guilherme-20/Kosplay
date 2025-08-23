@@ -16,7 +16,6 @@ namespace Kosplay.Infra.Mappings
             builder.Property(u => u.RefreshTokenExpiryTime)
                   .IsRequired();
 
-            // relacionamento 1:N User -> Products
             builder.HasMany(u => u.Products)
                   .WithOne(p => p.User)
                   .HasForeignKey(p => p.UserId);
