@@ -1,0 +1,19 @@
+﻿using System.ComponentModel.DataAnnotations;
+using Kosplay.Domain.Enum;
+
+namespace Kosplay.API.Vmodels.Auth
+{
+    public class RequestRegisterUserViewModel
+    {
+        [Required(ErrorMessage = "User Name is required")]
+        public string Username { get; set; } = string.Empty;
+
+        [EmailAddress]
+        [Required(ErrorMessage = "Email is required")]
+        public string Email { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Password is required")]
+        public string Password { get; set; } = string.Empty;
+        public List<int> RolesId { get; set; }
+    }
+}

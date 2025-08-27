@@ -4,10 +4,10 @@ using Microsoft.Extensions.Configuration;
 
 namespace Kosplay.Infra.Context
 {
-    public class FactoryDbContext : IDesignTimeDbContextFactory<AppDbContext>
+    public class FactoryDbContext : IDesignTimeDbContextFactory<KosplayDbContext>
     {
 
-        public AppDbContext CreateDbContext(string[] args)
+        public KosplayDbContext CreateDbContext(string[] args)
         {
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development";
 
@@ -19,11 +19,11 @@ namespace Kosplay.Infra.Context
                 .Build();
 
             // Configura o DbContextOptions
-            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+            var optionsBuilder = new DbContextOptionsBuilder<KosplayDbContext>();
             optionsBuilder.UseSqlServer(configuration.GetConnectionString("ConnectionDefault"));
 
             // Retorna uma nova instância do AppDbContext
-            return new AppDbContext(optionsBuilder.Options);
+            return new KosplayDbContext(optionsBuilder.Options);
 
         }
     }
